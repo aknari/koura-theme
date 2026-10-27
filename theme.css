@@ -1,0 +1,856 @@
+/******************************
+* Koura Theme                 *
+* Versión 1.0                 *
+*******************************/
+
+/*
+ * Para las depuraciones, utilizar .disabled{ ... }
+ */
+
+/* === VARIABLES PRINCIPALES === */
+:root {
+  /* Configuración de acento */
+  --accent-s: 80%;
+  --accent-l: 64%;
+
+  /* Sombras Neumórficas */
+  --shadow: 4px 4px 8px rgba(0, 0, 0, 0.15),
+           -4px -4px 8px rgba(255, 255, 255, 0.5);
+  --shadow-hover: inset 3px 3px 3px rgba(0, 0, 0, 0.2),
+                 inset -3px -3px 3px rgba(255, 255, 255, 0.7);
+  --shadow-active: inset 3px 3px 3px rgba(0, 0, 0, 0.5),
+                  inset -3px -3px 3px rgba(255, 255, 255, 0.2);
+  --shadow-selected: inset 3px 3px 3px rgba(0, 0, 0, 0.3);
+
+  /* Radios de borde */
+  --radius-s: 3px;
+  --radius-m: 6px;
+  --radius-l: 12px;
+
+  /* Thumb de los toggles. Obsidian no da sombra a esa pieza, así que la define
+     el tema: antes se pedían --toggle-thumb-shadow y
+     --toggle-thumb-enabled-shadow, que no existen en ningún sitio y dejaban
+     las dos declaraciones sin efecto. */
+  --toggle-thumb-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  --toggle-thumb-enabled-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+
+  /* Animaciones */
+  --anim-speed: 1;
+  --anim-duration-superfast: calc(75ms / var(--anim-speed));
+  --anim-duration-fast: calc(150ms / var(--anim-speed));
+  --anim-duration-moderate: calc(300ms / var(--anim-speed));
+  --anim-duration-slow: calc(600ms / var(--anim-speed));
+}
+
+/* === TEMA CLARO === */
+.theme-light {
+  color-scheme: light;
+
+  /* Colores de texto */
+  --text-normal: hsl(var(--accent-h), 12%, 12%);
+  --text-muted: hsl(var(--accent-h), 9%, 36%);
+  --text-faint: hsl(var(--accent-h), 6%, 64%);
+
+  /* Colores base */
+  --color-base-00: #ffffff;
+  --color-base-05: #fcfcfc;
+  --color-base-10: #fafafa;
+  --color-base-20: #F0F0F0;
+  --color-base-30: #e0e0e0;
+  --color-base-40: #bdbdbd;
+  --color-base-50: #ababab;
+  --color-base-60: #707070;
+  --color-base-70: #5a5a5a;
+  --color-base-100: #222222;
+
+  /* Colores de acento */
+  --accent-h: 232;
+
+  /* Colores de interfaz */
+  --background-primary: var(--color-base-00);
+  --background-secondary: hsl(var(--accent-h),
+                             calc((var(--accent-s) - 12%) / 6),
+                             calc(100% - (100% - var(--accent-l)) / 16));
+  --background-tertiary: hsl(calc(var(--accent-h) - 18),
+                            calc(var(--accent-s) - 4%),
+                            calc(100% - (100% - var(--accent-l)) / 8));
+
+  /* Modificadores */
+  --background-modifier-hover: hsla(var(--accent-h), 6%, 64%, 0.15);
+  --background-modifier-border: hsla(var(--accent-h),
+                                   calc(0.4*var(--accent-s)),
+                                   calc(var(--accent-l)), 0.2);
+
+  /* Sombras específicas */
+  --shadow-s: 0px 1px 2px rgba(0, 0, 0, 0.028),
+              0px 3.4px 6.7px rgba(0, 0, 0, .042),
+              0px 15px 30px rgba(0, 0, 0, .07);
+  --shadow-l: 0px 1.8px 7.3px rgba(0, 0, 0, 0.071),
+              0px 6.3px 24.7px rgba(0, 0, 0, 0.112),
+              0px 30px 90px rgba(0, 0, 0, 0.2);
+
+  /* Scrollbar */
+  --scrollbar-active-thumb-bg: rgba(var(--mono-rgb-100), 0.15);
+  --scrollbar-bg: rgba(var(--mono-rgb-100), 0);
+  --scrollbar-thumb-bg: rgba(var(--mono-rgb-100), 0.15);
+}
+
+.theme-light .workspace {
+    backdrop-filter: brightness(1) blur(5px); /* filter for light mode */
+    background-color: transparent;
+}
+
+/* === TEMA OSCURO === */
+.theme-dark {
+  color-scheme: dark;
+
+  /* Colores de texto */
+  --text-normal: hsl(var(--accent-h), 0%, 95%); /* Texto brillante */
+  --text-muted: hsl(var(--accent-h), 0%, 70%); /* Texto menos brillante */
+  --text-faint: hsl(var(--accent-h), 0%, 50%); /* Texto aún menos brillante */
+
+  /* Colores base */
+  --color-base-00: #121212; /* Muy oscuro para el fondo */
+  --color-base-05: #1E1E1E; /* Oscuro */
+  --color-base-10: #262626; /* Medio oscuro */
+  --color-base-20: #333333; /* Más claro, pero todavía oscuro */
+  --color-base-30: #4D4D4D; /* Grises más claros, aún oscuros */
+  /* Los pasos que faltaban, con los mismos valores que trae Obsidian en oscuro:
+     así la rampa se lee entera en vez de completarse por herencia. */
+  --color-base-40: #555555;
+  --color-base-50: #666666;
+  --color-base-60: #999999;
+  --color-base-70: #B3B3B3;
+  --color-base-100: #E0E0E0; /* Un gris claro para el texto */
+
+  /* Colores de acento */
+  --accent-h: 232; /* Mantener el mismo color de acento */
+
+  /* Colores de interfaz */
+  --background-primary: var(--color-base-00); /* Fondo primario oscuro */
+  --background-secondary: hsl(var(--accent-h), 80%, 18%); /* Fondo secundario más oscuro */
+  --background-tertiary: hsl(var(--accent-h), 80%, 25%); /* Fondo terciario más claro que el secundario */
+
+  /* Modificadores */
+  --background-modifier-hover: hsla(var(--accent-h), 80%, 50%, 0.15); /* color de hover más claro */
+  --background-modifier-border: hsla(var(--accent-h), 80%, 30%, 0.2);
+
+  /* Sombras específicas */
+  --shadow-s: 0px 1px 2px rgba(255, 255, 255, 0.1),
+              0px 3.4px 6.7px rgba(255, 255, 255, 0.1),
+              0px 15px 30px rgba(255, 255, 255, 0.1);
+  --shadow-l: 0px 1.8px 7.3px rgba(255, 255, 255, 0.15),
+              0px 6.3px 24.7px rgba(255, 255, 255, 0.1),
+              0px 30px 90px rgba(255, 255, 255, 0.2);
+
+  /* Scrollbar */
+  --scrollbar-active-thumb-bg: rgba(var(--mono-rgb-100), 0.25);
+  --scrollbar-bg: rgba(var(--mono-rgb-100), 0);
+  --scrollbar-thumb-bg: rgba(var(--mono-rgb-100), 0.25);
+}
+
+.theme-dark .workspace {
+    backdrop-filter: brightness(0.35) blur(5px); /* filter for dark mode */
+    background-color: transparent;
+}
+
+.disabled {
+.horizontal-main-container { /* below is the background image. Change it to whatever you want */
+    background: url(https://images.unsplash.com/photo-1454496522488-7a8e488e8606?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2076&q=80);
+    background-size: cover;
+}
+}
+
+/* === CONFIGURACIÓN DE LAYOUT === */
+body {
+  /* Tarjetas y bordes. Sólo lo que el tema usa de verdad: las otras
+     (--card-shadow-light/dark, --card-border-radius-dark, --card-padding,
+     --sidebar-width) estaban definidas y sin usar en ninguna regla. */
+  --card-border-radius-light: 8px;
+
+  /* Márgenes y espaciado */
+  --header-height: 40px;
+}
+
+/* === ELEMENTOS DE INTERFAZ BASE === */
+
+/* Barra lateral y navegación */
+.workspace-ribbon {
+  background-color: transparent;
+  border-right: none;
+  padding: 5px 0 6px;
+  margin-top: 44px;
+  border-radius: var(--card-border-radius-light);
+}
+
+.side-dock-ribbon-action {
+  padding: 5px;
+  margin-top: 10px;
+  background-color: var(--interactive-normal);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow);
+}
+
+.side-dock-ribbon-action:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.side-dock-ribbon-action:active {
+  box-shadow: var(--shadow-active);
+}
+
+/* Cabecera de documentos */
+.view-header {
+  height: var(--header-height);
+}
+
+.view-header-title {
+  background-color: var(--interactive-normal);
+  border: none;
+  margin-left: 1px;
+  padding: 5px 10px;
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow);
+}
+
+.view-header-title:hover {
+  background-color: var(--background-modifier-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Pestañas y contenedores */
+.workspace-tab-header-container {
+  display: flex;
+  height: 40px;
+  padding-top: 0;
+  margin-bottom: 0;
+}
+
+.workspace-tab-header-inner {
+  border-radius: var(--radius-l);
+  margin: 0 5px;
+  padding: 0 6px 0 8px;
+  box-shadow: var(--shadow);
+}
+
+.workspace-tab-header-inner:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.workspace-tab-header-inner:active {
+  box-shadow: var(--shadow-active);
+}
+
+.workspace-tabs .workspace-tab-header.is-active .workspace-tab-header-inner {
+  background: var(--background-primary);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-m);
+}
+
+/* Botones de navegación */
+.nav-action-button,
+.workspace-tab-header-tab-list span.clickable-icon,
+.sidebar-toggle-button .clickable-icon {
+  background-color: var(--background-tertiary);
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow);
+  padding: 7px;
+  margin: 5px;
+  height: 32px;
+  width: 32px;
+}
+
+.nav-action-button:hover,
+.workspace-tab-header-tab-list span.clickable-icon:hover,
+.sidebar-toggle-button .clickable-icon:hover {
+  background-color: var(--background-modifier-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+.nav-action-button:active,
+.workspace-tab-header-tab-list span.clickable-icon:active,
+.sidebar-toggle-button .clickable-icon:active {
+  box-shadow: var(--shadow-active);
+}
+
+/* Barra de título */
+/* Barra de título y botones de ventana */
+.titlebar-button-container.mod-right {
+  margin-right: 16px;
+}
+
+.titlebar-button-container.mod-right .titlebar-button {
+  height: 24px;
+  width: 24px;
+  border-radius: 12px;
+  padding: 0;
+  margin: auto 8px;
+  background-color: var(--background-secondary);
+  color: var(--text-normal);
+  opacity: 0.8;
+}
+
+.titlebar-button-container.mod-right .titlebar-button:hover {
+  background-color: var(--background-modifier-hover);
+  opacity: 1;
+}
+
+.titlebar-button:not(.mod-logo) > svg {
+  display: block !important;  /* Forzamos que se muestren los iconos */
+  color: var(--text-normal);
+}
+
+/* Divisores y bordes */
+.workspace-tab-header-container,
+.workspace-tabs.mod-top .workspace-tab-header-container,
+.workspace-ribbon.mod-left:before {
+  border-bottom: 1px solid transparent;
+}
+
+/* Espacios de trabajo */
+.workspace-split .workspace-tabs:not(.mod-top) .workspace-tab-container > .workspace-leaf {
+  box-shadow: inset 0px 1px 0px var(--divider-color);
+}
+
+.disabled {
+
+/* === ELEMENTOS DE CONTENIDO === */
+
+/* Texto y tipografía básica */
+.markdown-preview-view,
+.markdown-source-view {
+  --font-text: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-monospace: "Source Code Pro", Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-text);
+  line-height: 1.6;
+  padding: 1em;
+}
+
+p {
+  margin-block-start: 0.8em;
+  margin-block-end: 0.85em;
+}
+
+}
+
+/* Encabezados */
+.markdown-preview-view h1,
+.markdown-preview-view h2,
+.markdown-preview-view h3,
+.markdown-preview-view h4,
+.markdown-preview-view h5,
+.markdown-preview-view h6 {
+  color: var(--text-normal);
+  font-weight: 600;
+  margin: 1em 0 0.5em 0;
+  line-height: 1.3;
+}
+
+h1, h2 {
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+h1::after,
+h2::after {
+  content: '';
+  display: block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--background-tertiary);
+}
+
+/* Enlaces */
+.internal-link {
+  text-decoration: none !important;
+  background-color: var(--interactive-normal);
+  margin: 0 2px 0 0;
+  padding: 0 3px;
+  border-radius: var(--radius-m);
+  display: inline-block;
+  box-shadow: var(--shadow);
+}
+
+.disabled {
+
+.external-link {
+  text-decoration: none !important;
+  background-color: var(--interactive-normal);
+  margin: 0 2px 0 1px;
+  padding: 0 17px 0 5px;
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow);
+  display: inline-flex;
+  align-items: center;
+}
+
+}
+
+.internal-link:hover,
+.external-link:hover {
+  background-color: var(--background-modifier-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+.internal-link:active,
+.external-link:active {
+  box-shadow: var(--shadow-active);
+}
+
+/* Listas y tareas */
+.markdown-preview-view ul {
+  padding-left: 1.5em;
+}
+
+.markdown-preview-view ul li {
+  list-style-type: none;
+  position: relative;
+  margin: 0.2em 0;
+}
+
+.markdown-preview-view ul li::before {
+  content: "•";
+  color: var(--interactive-accent);
+  font-weight: bold;
+  position: absolute;
+  left: -1.2em;
+}
+
+/* Checkboxes de tareas */
+.task-list-item {
+  padding-left: 1.5em;
+  position: relative;
+  margin: 0.2em 0;
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+}
+
+.task-list-item-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid var(--text-muted);
+  border-radius: 4px;
+  position: relative;
+  margin: 0 8px 0 0; /* Cambio aquí */
+  width: 16px; /* Ajustar márgenes según necesites */
+  height: 16px;
+  cursor: pointer;
+  background: linear-gradient(145deg, var(--background-secondary), var(--background-primary));
+  box-shadow: var(--shadow-hover);
+  transition: box-shadow 0.2s ease, background-color 0.2s ease,
+              border-color 0.2s ease, transform 0.2s ease;
+  vertical-align: middle; /* Añadir esto para mejor alineación */
+}
+
+.task-list-item-checkbox:hover {
+  box-shadow: var(--shadow-active);
+}
+
+.task-list-item-checkbox:checked {
+  background: var(--interactive-accent);
+  border-color: var(--interactive-accent);
+  box-shadow: var(--shadow);
+}
+
+/* El tic de la casilla marca lo pone Obsidian en el ::after del propio input
+   (una máscara con el SVG del check, en --checkbox-marker-color). El tema tenía
+   aquí un "✓" de texto que se le superponía: sobraba y se ha quitado. */
+
+.task-list-item.is-checked {
+  color: var(--text-muted);
+  /* text-decoration: line-through; */
+  background: var(--interactive-accent);
+}
+
+/* Tareas migradas «- [>]». Obsidian las da por is-checked / checked:
+   - el cuadro de color (y el glifo) ya los pinta la regla de arriba, así que
+     aquí sólo se cambia el carácter, para no repetir propiedades;
+   - lo que sí hay que deshacer es el fondo de acento que 'checked' pone a la
+     línea entera en lectura;
+   - el color del texto se deja como el de cualquier otra línea: tocarlo para
+     apagarlo teñía de azul el texto (muted lleva el tono del acento). */
+.task-list-item[data-task=">"],
+.cm-line[data-task=">"] {
+  background: transparent;
+}
+
+[data-task=">"] .task-list-item-checkbox:checked::before,
+.task-list-item-checkbox[data-task=">"]:checked::before {
+  content: "\2192"; /* →, en lugar del ✓ */
+  position: absolute;
+  color: var(--text-on-accent);
+  font-size: 12px;
+  font-weight: bold;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* El otro tic: el tema pone el suyo en el ::before de arriba, pero Obsidian
+   dibuja además el suyo en el ::after del propio input
+   (input[type=checkbox]:checked:after, que es una máscara con el SVG del
+   check). Sin ocultarlo, la migrada muestra el tic y la flecha superpuestos. */
+[data-task=">"] input[type="checkbox"]:checked::after,
+input[type="checkbox"][data-task=">"]:checked::after {
+  content: none;
+  display: none;
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+  /* Bloques de código */
+.markdown-preview-view pre {
+  max-width: 800px;
+  margin: auto;
+}
+
+code, pre {
+  font-family: var(--font-monospace);
+  word-wrap: break-word;
+  white-space: pre;
+  overflow-x: auto;
+  line-height: 1.6;
+  font-size: 0.87em;
+}
+
+.theme-light code,
+.theme-light pre {
+  background-color: #F6F6F6;
+  border: 1px solid #EAEAEA;
+}
+
+/* Elementos especiales */
+.markdown-preview-view blockquote {
+  margin: 1em 0;
+  padding: 0.75em 1.2em;
+  border-left: 4px solid var(--interactive-accent);
+  background-color: var(--background-secondary);
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+.markdown-preview-view blockquote p {
+  margin: 0;
+}
+
+.markdown-preview-view mark {
+  background-color: hsla(var(--interactive-accent-hsl), 0.2);
+  padding: 0 0.2em;
+  border-radius: 3px;
+}
+
+/* Imágenes */
+.markdown-preview-view img,
+img {
+  border-radius: var(--image-radius);
+  max-width: 100%;
+  box-shadow: var(--shadow);
+}
+
+/* === COMPONENTES INTERACTIVOS === */
+
+/* Búsqueda y resultados */
+.search-result-file-match,
+.search-result-file-matches {
+  line-height: 20px;
+  padding: 2px 5px;
+  border-radius: var(--radius-m);
+  background-color: var(--background-primary);
+}
+
+.search-result-file-matches {
+  padding: 4px;
+  margin: 8px 0;
+}
+
+.search-result-file-match:hover {
+  background-color: var(--background-tertiary);
+}
+
+.search-result-file-matched-text {
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow);
+  margin: 1px 2px;
+  padding: 2.5px;
+}
+
+.search-result-file-matched-text:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.search-result-file-matched-text:active {
+  box-shadow: var(--shadow-active);
+}
+
+/* Menús y desplegables */
+.dropdown {
+  margin: 5px 0;
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-m);
+}
+
+.dropdown:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.dropdown:active {
+  box-shadow: var(--shadow-active);
+}
+
+.suggestion-item.is-selected,
+.suggestion-item.mod-complex.is-selected {
+  border-radius: var(--radius-m);
+  box-shadow: var(--shadow-hover);
+}
+
+.suggestion-item.mod-complex kbd.suggestion-hotkey {
+  border-radius: var(--radius-s);
+  background-color: var(--background-secondary);
+}
+
+/* Controles de formulario */
+.checkbox-container {
+  box-shadow: var(--shadow-hover);
+}
+
+.checkbox-container.is-enabled {
+  box-shadow: var(--shadow);
+}
+
+.checkbox-container:hover,
+.checkbox-container.is-enabled:hover {
+  box-shadow: var(--shadow-active);
+}
+
+.checkbox-container:after {
+  box-shadow: var(--toggle-thumb-shadow);
+}
+
+.checkbox-container.is-enabled:after {
+  box-shadow: var(--toggle-thumb-enabled-shadow);
+}
+
+/* Sliders */
+input[type='range'] {
+  background-color: var(--slider-track-background);
+}
+
+input[type='range']::-webkit-slider-thumb {
+  box-shadow: var(--toggle-thumb-shadow);
+  transition: none;
+}
+
+input[type='range']::-webkit-slider-thumb:is(:hover, :active) {
+  box-shadow: var(--toggle-thumb-shadow);
+  outline: 2px solid var(--background-modifier-border-hover);
+  outline-offset: 2px;
+  border-color: var(--slider-thumb-border-color);
+}
+
+/* Botones de configuración */
+.clickable-icon.setting-editor-extra-setting-button,
+.clickable-icon.setting-add-hotkey-button,
+.clickable-icon.setting-restore-hotkey-button,
+.modal-close-button {
+  background-color: var(--interactive-normal);
+  border-radius: var(--radius-m);
+  margin-right: 3px;
+  box-shadow: var(--shadow);
+}
+
+.clickable-icon.setting-editor-extra-setting-button:hover,
+.clickable-icon.setting-add-hotkey-button:hover,
+.clickable-icon.setting-restore-hotkey-button:hover,
+.modal-close-button:hover {
+  background-color: var(--background-modifier-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Elementos de la comunidad */
+.community-item {
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow);
+}
+
+.community-item:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.community-item.is-selected {
+  box-shadow: var(--shadow-selected);
+}
+
+.community-modal-info-author a:link,
+.community-modal-info-repo a:link {
+  text-decoration: none !important;
+  background-color: var(--interactive-normal);
+  margin: 0 2px 0 0;
+  padding: 0 5px 0 4px;
+  border-radius: var(--radius-m);
+  display: inline-block;
+  box-shadow: var(--shadow);
+}
+
+/* Tags */
+.tag {
+  background-color: var(--text-accent);
+  /* Obsidian pinta el texto de la etiqueta con --tag-color, que es el propio
+     acento: sobre este fondo de acento quedaría ilegible. */
+  color: var(--text-on-accent);
+  border: none;
+  padding: 0 9px;
+  text-align: center;
+  text-decoration: none !important;
+  display: inline-block;
+  margin: 5px 4px;
+  cursor: pointer;
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow);
+}
+
+.tag:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.tag:active {
+  box-shadow: var(--shadow-active);
+}
+
+/* Multi-column: se delega al snippet MCL Multi Column.css */
+/* Eliminado: Koura tenía su propia implementación que entraba en conflicto con el snippet */
+/* === ANIMACIONES Y EFECTOS VISUALES === */
+
+/* Animación de escalado */
+@keyframes scale-up {
+  0% {
+    transform: scale(0.75);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Animación de deslizamiento */
+@keyframes slide-up {
+  0% {
+    transform: translateY(0%);
+    opacity: 0;
+  }
+  15% {
+    transform: translateY(5px);
+    opacity: 0;
+  }
+  25% {
+    transform: translateY(10px);
+  }
+  45% {
+    opacity: 0.5;
+  }
+  65% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(0%);
+    opacity: 1;
+  }
+}
+
+/* Aplicación de animaciones */
+body:not(.is-phone, .extra-anim-remove) .prompt,
+body:not(.is-mobile, .extra-anim-remove) .document-search-container,
+body:not(.is-phone, .extra-anim-remove) .modal:not(:has(.checkbox-container)) {
+  animation: scale-up var(--anim-duration-fast) cubic-bezier(0.175, 0.885, 0.32, 1.095) both;
+}
+
+body:not(.extra-anim-remove) .workspace-split .workspace-tabs:not(.mod-stacked) .workspace-leaf-content {
+  animation: slide-up var(--anim-duration-fast) forwards;
+}
+
+/* Scrollbars personalizadas. Se quita el filtro `:not(.native-scrollbars)`: esa
+   clase ya no existe en Obsidian (0 apariciones en su CSS), así que el filtro
+   no filtraba nada. */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+body.is-mobile ::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece {
+  background-color: transparent !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: var(--radius-l);
+}
+
+:hover::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-bg) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-active-thumb-bg) !important;
+  margin-right: 100px;
+  border-radius: var(--radius-l);
+  border: 2px solid transparent;
+}
+
+/* Efectos de transición */
+.workspace-tab-header-inner,
+.nav-file-title,
+.nav-folder-title,
+.tag,
+.internal-link,
+.external-link,
+button,
+.clickable-icon,
+.task-list-item-checkbox {
+  /* Propiedades explícitas en lugar de `all`: se evita animar medidas
+     (ancho, márgenes) y no provoca recálculo de layout en cada hover. */
+  transition: box-shadow 0.2s ease, background-color 0.2s ease,
+              color 0.2s ease, border-color 0.2s ease,
+              transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Efectos de hover en elementos navegables */
+.nav-file-title:hover,
+.nav-folder-title:hover,
+.side-dock-item:hover {
+  background: linear-gradient(145deg, var(--background-secondary-alt), var(--background-secondary));
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05),
+              0 1px 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Efecto de carga suave para imágenes: retirado. La versión original
+   (`img { opacity: 0 }` + `img.is-loaded { opacity: 1 }`) no puede funcionar:
+   Obsidian pone `is-loaded` en el contenedor `.internal-embed`, no en el `img`,
+   así que las imágenes se quedaban invisibles al activar este bloque. */
+
+/* Efecto de enfoque para elementos activos */
+.is-focused {
+  animation: focusPulse 1s ease;
+}
+
+@keyframes focusPulse {
+  0% {
+    box-shadow: 0 0 0 0 hsla(var(--interactive-accent-hsl), 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 4px hsla(var(--interactive-accent-hsl), 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 hsla(var(--interactive-accent-hsl), 0);
+  }
+}
+
