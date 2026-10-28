@@ -466,36 +466,66 @@ h2::after {
   background: var(--interactive-accent);
 }
 
-/* Tareas migradas «- [>]». Obsidian las da por is-checked / checked:
-   - el cuadro de color (y el glifo) ya los pinta la regla de arriba, así que
-     aquí sólo se cambia el carácter, para no repetir propiedades;
-   - lo que sí hay que deshacer es el fondo de acento que 'checked' pone a la
-     línea entera en lectura;
-   - el color del texto se deja como el de cualquier otra línea: tocarlo para
-     apagarlo teñía de azul el texto (muted lleva el tono del acento). */
-.task-list-item[data-task=">"],
-.cm-line[data-task=">"] {
+/* --- Estados de tarea (Task Status, plugin Tasks) ---
+   Obsidian da por marcada cualquier casilla con un carácter distinto del
+   espacio, y sólo «x» tiene un tic que signifique algo: sin esto, «[!]», «[/]»
+   o «[?]» se veían idénticas a «[x]». Cada estado declara aquí su color y su
+   glifo, y las reglas compartidas de abajo los aplican en los dos sitios donde
+   Obsidian escribe `data-task`: el `li.task-list-item` y el propio
+   `input.task-list-item-checkbox`. «x» y «X» no aparecen: siguen siendo el
+   cuadro de acento con el tic de Obsidian, que es lo que una tarea hecha debe
+   parecer. Un estado que no esté en la tabla queda con el contorno del color
+   por defecto y sin glifo: distinto de «x», que es lo que se busca. */
+:is(.task-list-item, .task-list-item-checkbox)[data-task="/"] { --koura-task-color: var(--color-cyan);   --koura-task-glyph: "/"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="!"] { --koura-task-color: var(--color-red);    --koura-task-glyph: "!"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="?"] { --koura-task-color: var(--color-yellow); --koura-task-glyph: "?"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="*"] { --koura-task-color: var(--color-yellow); --koura-task-glyph: "\2605"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="<"] { --koura-task-color: var(--color-blue);   --koura-task-glyph: "\2190"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task=">"] { --koura-task-color: var(--text-muted);   --koura-task-glyph: "\2192"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="-"] { --koura-task-color: var(--color-orange); --koura-task-glyph: "\2013"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="i"] { --koura-task-color: var(--color-blue);   --koura-task-glyph: "i"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="I"] { --koura-task-color: var(--color-purple); --koura-task-glyph: "\25C6"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="p"] { --koura-task-color: var(--color-green);  --koura-task-glyph: "+"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="c"] { --koura-task-color: var(--color-red);    --koura-task-glyph: "\2212"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="u"] { --koura-task-color: var(--color-green);  --koura-task-glyph: "\2191"; }
+:is(.task-list-item, .task-list-item-checkbox)[data-task="d"] { --koura-task-color: var(--color-red);    --koura-task-glyph: "\2193"; }
+
+/* La línea deja de llevar el fondo de acento que «checked» pone en lectura, y
+   el texto se queda legible: «is-checked» lo apagaba, y una tarea importante no
+   es una tarea terminada. */
+.task-list-item[data-task]:not([data-task="x"]):not([data-task="X"]),
+.cm-line[data-task]:not([data-task="x"]):not([data-task="X"]) {
   background: transparent;
+  color: var(--text-normal);
 }
 
-[data-task=">"] .task-list-item-checkbox:checked::before,
-.task-list-item-checkbox[data-task=">"]:checked::before {
-  content: "\2192"; /* →, en lugar del ✓ */
+/* La casilla: contorno del color del estado, sin relleno. */
+.task-list-item[data-task]:not([data-task="x"]):not([data-task="X"]) .task-list-item-checkbox,
+.task-list-item-checkbox[data-task]:not([data-task="x"]):not([data-task="X"]) {
+  background: transparent;
+  border-color: var(--koura-task-color, var(--text-muted));
+}
+
+/* El glifo, donde antes estaba la flecha de «[>]». */
+.task-list-item[data-task]:not([data-task="x"]):not([data-task="X"]) .task-list-item-checkbox::before,
+.task-list-item-checkbox[data-task]:not([data-task="x"]):not([data-task="X"])::before {
+  content: var(--koura-task-glyph, "");
   position: absolute;
-  color: var(--text-on-accent);
-  font-size: 12px;
-  font-weight: bold;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  color: var(--koura-task-color, var(--text-muted));
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
 }
 
-/* El otro tic: el tema pone el suyo en el ::before de arriba, pero Obsidian
-   dibuja además el suyo en el ::after del propio input
-   (input[type=checkbox]:checked:after, que es una máscara con el SVG del
-   check). Sin ocultarlo, la migrada muestra el tic y la flecha superpuestos. */
-[data-task=">"] input[type="checkbox"]:checked::after,
-input[type="checkbox"][data-task=">"]:checked::after {
+/* El otro tic: el tema pone el suyo arriba, pero Obsidian dibuja además el
+   suyo en el ::after del propio input (input[type=checkbox]:checked:after, una
+   máscara con el SVG del check). Sin ocultarlo, el estado saldría con glifo y
+   tic superpuestos. */
+.task-list-item[data-task]:not([data-task="x"]):not([data-task="X"]) input[type="checkbox"]:checked::after,
+input[type="checkbox"][data-task]:not([data-task="x"]):not([data-task="X"]):checked::after {
   content: none;
   display: none;
   -webkit-mask-image: none;
